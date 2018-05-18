@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    window.onload = function () {
+
+        /* 
+            es6 总结
+         */
+
+        test();
+        test2();
+        test3();
+        
+        
+        
+        /* 一.变量let和const */
+
+        //  1.var关键字声明变量，无论声明在何处，都被视为声明在函数最顶部，这就是函数变量提升
+        //  以下两个函数相等
+
+        function test() {
+            if (0>1) {
+                var texts = "abc";
+            } else {
+                console.log(texts);                             //undefined
+            }
+        }
+
+        function test2() {
+            var texts;                                          //变量提升
+            if (0>1) {
+                texts = 'abc';
+            } else {
+                console.log(texts);                              //undefine
+            }
+            //这里再访问test也是undefined
+        }
+
+        // 2. let表示变量，const表示为常量，都是块级作用域
+        //(1) 块级的意思为：在一个函数内部，或在一个代码块内    
+        function test3() {
+            if (0>1) {
+                let texts = "123";                              //let作用域在它所在当前代码块(花括号),不会被提升到函数顶部
+            } else {
+                // console.log(texts);                             //此处无法访问test，发生错误未定义
+            }
+        }
+
+        //(2) const为常量，它的值被设置完后就不能再修改
+        const name='rita';
+        // name='joy';                                             //再次赋值时报错
+
+        //(3) 当const为一个对象时，对象所包含的值可以被修改，因为对象所指向的地址没有改变
+        const student={
+            name:'linda'
+        }
+        student.name='lily';
+
+        //错误，直接修改了对象
+        // student={
+        //     name:'aaa'
+        // }
+
+
+        var funcArr=[];
+        for(var i=0;i<10;i++){
+            funcArr.push(function(){
+                debugger;
+                console.log(i);
+            })
+        }
+
+        funcArr.forEach(function(item){
+            item();
+        })
+
+
+        
+
+    }
+
+
+</script>
+
+</html>
