@@ -17,81 +17,215 @@
 
         /* 
             es6 总结
+            ECMAScript 是 js的规格，js是es的一种实现，es6为5.1版本以后的js下一代标准
          */
 
-        test();
-        test2();
-        test3();
-        
-        
-        
+        // test();
+        // test2();
+        // test3();
+
+
+
         /* 一.变量let和const */
 
-        //  1.var关键字声明变量，无论声明在何处，都被视为声明在函数最顶部，这就是函数变量提升
-        //  以下两个函数相等
+        //  1.var关键字
+        // (1)var声明变量，无论声明在何处，都被视为声明在函数最顶部，这就是函数变量提升
+        // (2)var声明的变量，函数作用域，即作用域为声明变量的语句所在的函数内
 
+        //  以下两个函数相等
         function test() {
-            if (0>1) {
+            if (0 > 1) {
                 var texts = "abc";
             } else {
-                console.log(texts);                             //undefined
+                console.log(texts); //undefined
             }
         }
 
         function test2() {
-            var texts;                                          //变量提升
-            if (0>1) {
+            var texts; //变量提升
+            if (0 > 1) {
                 texts = 'abc';
             } else {
-                console.log(texts);                              //undefine
+                console.log(texts); //undefine
             }
-            //这里再访问test也是undefined
+            //这里再访问texts也是undefined
         }
 
-        // 2. let表示变量，const表示为常量，都是块级作用域
-        //(1) 块级的意思为：在一个函数内部，或在一个代码块内    
+        // 2. let声明变量，块级作用域，不存在变量提升，也不允许重复声明，必须声明之后再引用，否则报错
+        //(1) 块级的意思为：声明只在一个函数内部，或声明所在的代码块内有效    
         function test3() {
-            if (0>1) {
-                let texts = "123";                              //let作用域在它所在当前代码块(花括号),不会被提升到函数顶部
+            if (0 > 1) {
+                let texts = "123"; //let作用域在它所在当前代码块(花括号),不会被提升到函数顶部
             } else {
-                // console.log(texts);                             //此处无法访问test，发生错误未定义
+                console.log(texts); //此处无法访问test，发生错误未定义
             }
         }
 
-        //(2) const为常量，它的值被设置完后就不能再修改
-        const name='rita';
+        for (let j = 0; j < 10; j++) {
+            // console.log(j);                                   //输出0到9
+        }
+        // console.log(j);                                       //报错
+
+
+        //(2)不存在变量提升，即变量必须声明之后才能使用
+        // console.log(foo);                                     //报错
+        let foo = 1;
+
+
+        //(3)暂时性死区,使用let命令声明变量之前，该变量是不可用的，语法上称为暂时性死区
+        var temp = 123;
+        if (true) {
+            // temp='abc';                                         //报错，使用let声明，在声明之前都属于x的死区
+            let temp;
+        }
+
+        // typeof(x);                                              //报错
+        let x;
+
+        typeof undeclared; //未声明的变量反而不会报错
+
+
+        //(4)不允许重复声明
+        function declareFn() {
+            // let a=0;
+            // let a=10;
+        }
+
+        function params(arg) {
+            //let arg;                                            //不允许在函数内部重新声明参数
+        }
+
+        function params2(arg) {
+            {
+                let arg;
+            }
+        }
+
+
+
+
+
+
+
+
+        //example1
+        var funcs = [];
+
+        //i是var声明的，全局有效，每一次循环i会发生变化，被赋值给funcs的函数内部console.log(i)。所有数组funcs中的成员里的i都指向同一个i，即最后一个10
+        for (var i = 0; i < 10; i++) {
+            funcs.push(function () {
+                console.log(i); //每个数组项都是一个方法，输出十次10
+            })
+        }
+        funcs.forEach(function (func) {
+            func();
+        })
+
+        //example2
+        const funcArr = [];
+
+        //i是let声明的，i只在本轮循环中有效，每次循环i都是一个新的变量
+        for (let i = 0; i < 10; i++) {
+            funcArr.push(function () {
+                console.log(i); //输出0-9
+            })
+        }
+        funcArr.forEach(func => func());
+
+        //example2
+        //for循环中，设置变量的部分是父作用域，循环体内是单独的子作用域，两个i有不同的作用域
+        for (let i = 0; i < 3; i++) {
+            let i = 'abc';
+            console.log(i); //输出三次abc
+        }
+
+
+
+
+
+
+        //3. const
+        //(1)声明一个基本类型时为常量，只能在声明时赋值，不可随意修改
+        const name = 'rita';
         // name='joy';                                             //再次赋值时报错
 
-        //(3) 当const为一个对象时，对象所包含的值可以被修改，因为对象所指向的地址没有改变
-        const student={
-            name:'linda'
+        // const foo;                                              //报错，const一旦声明变量就要立即初始化，不能之后再赋值
+
+        //(2)当const为一个对象时，对象所包含的值可以被修改，因为保存的是一个指针，对象所指向的地址没有改变（并不是变量的值不能改动，而是变量指向的那个内存地址不能改动）
+        const student = {
+            name: 'linda'
         }
-        student.name='lily';
+        student.name = 'lily';
+
+        //常量foos存储的是一个地址，这个地址指向一个对象。这个地址不可变，即不能把foo指向另一个地址，但对象本身是可变的，可为其添加属性。
+        const foos = {};
+        foos.prop = 123;
+        foos.prop; //123 
 
         //错误，直接修改了对象
         // student={
         //     name:'aaa'
         // }
 
+        //(3)const声明的变量也不可提升，不可重复声明，只在块级作用域中有效
 
-        var funcArr=[];
-        for(var i=0;i<10;i++){
-            funcArr.push(function(){
-                debugger;
-                console.log(i);
-            })
+
+
+        //4、块级作用域
+        //(1)为什么要使用？
+
+        //防止变量提升，内层变量可能会覆盖外层变量
+        var date = new Date();
+
+        function f() {
+            //var date变量提升
+            console.log(date); //undefined
+            if (false) {
+                // var date='hello';
+            }
+        }
+        f();
+
+        function blockFn() {
+            let n = 5;
+            if (true) {
+                let n = 10; //此n只在if代码块内有效
+            }
+            console.log(n); //5
         }
 
-        funcArr.forEach(function(item){
-            item();
-        })
 
 
-        
+        //5.顶层对象的属性
+        //(1)顶层对象，在浏览器中指的是window对象，es6规定var和function声明的全局变量依旧是顶层对象的属性
+        //(2)let，const，class声明的全局变量，不属于全局对象的属性
+
+        var vars = 1;
+        console.log(window.vars); //1
+
+        let bars = 2;
+        console.log(window.bars); //undefined
+
+
+        //二、模板字符串
+        //(1)字符串格式化，将表达式嵌入字符串进行拼接
+
+        //es5
+        var first = '123';
+        var last = '789';
+        var yourname = 'linda' + first + last;
+        console.log('your name is ' + yourname);
+
+        //es6
+        console.log(`my name is ${first} ${last}`);
+        console.log(`http://localhost:3000/api/messages/${first}`);
+
+
+
+
+
 
     }
-
-
 </script>
 
 </html>
