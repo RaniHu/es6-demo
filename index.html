@@ -208,7 +208,7 @@
 
 
         //二、模板字符串
-        //(1)字符串格式化，将表达式嵌入字符串进行拼接
+        //1.字符串格式化，将表达式嵌入字符串进行拼接
 
         //es5
         var first = '123';
@@ -219,6 +219,257 @@
         //es6
         console.log(`my name is ${first} ${last}`);
         console.log(`http://localhost:3000/api/messages/${first}`);
+
+
+        //2.多行字符串使用 ``
+
+        //es5
+        var roadPoem = 'Then look the other, as just' +
+            'this is the end';
+
+        //es6 
+        var roadPoems = `Then look the other, as just the end`;
+
+
+        //三、函数
+        //1.默认参数
+        function link(height = 50, color = 'red', url = 'www.baidu.com') {
+            console.log(url);
+        }
+
+        //2.箭头函数
+        //(1)函数的快捷写法：不需要function关键字创建函数；省略return关键字；继承当前上下问的this关键字
+
+        [1, 2, 3, 4].map(x => x + 1);
+
+        //等同于
+        [1, 2, 3, 4].map((function (x) {
+            return x + 1;
+        }).bind(this));
+
+
+
+        //(2)当函数只有一个参数时，可以省略括号；当函数返回仅有一个表达式时可以省略{}和return
+
+        var people = name => 'hello' + name                           //name为参数，后面为return之后的语句
+
+        var people2 = (name, age) => {                               //两个参数括号不可省略
+            const fullname = 'hello' + name;
+            return fullname;
+        }
+
+        var ids = ['123434', '234234234', '3423423'];
+        console.log(ids.map(value => `ID is ${value}`));
+        console.log(ids.map((value, index) => `ID of ${index} element is ${value}`));      //两个参数括号不可省略
+
+
+        //(3)箭头函数中this还是原来的this
+
+        //es5
+        var _this = this;
+        // document.querySelector("#btn").click(function(){
+        //     _this.sendData();
+        // })
+
+        //es6 
+        // document.querySelector("#btn").click((event)=>{
+        //     this.sendData();
+        // })
+
+
+
+        //四、对象的拓展
+        //1.es6省略冒号和function关键字
+        const person = {
+            name: 'lua',
+            getName() {
+                console.log(this.name);
+            }
+        }
+
+        //2.Object.assign(目标对象，源1，源2)浅复制，把任意多个源对象可枚举的属性拷贝给目标对象，返回目标对象。
+
+        //实际项目中，为了不改变源对象，一般把目标对象传为{}
+        const objA = {
+            name: 'lucy',
+            age: 20
+        };
+        const objB = {
+            address: 'Shanghai'
+        }
+        const obj = Object.assign({}, objA, objB);
+        console.log(obj);                                          //{name: "lucy", age: 20, address: "Shanghai"}
+
+
+
+        //五、解构
+        //es6新增解构，可以将数组或对象分解为更小的部分(从数组和对象中提取值，对变量进行复制，称为解构)
+
+
+        //1.数组解构
+        //(1)等号两边的模式相同，左边变量就会被赋予对应的值
+        let [a, b, c] = [1, 2, 3];
+
+        //(2)不完全解构，左边只匹配一部分等号右边的数组，仍可以解构成功
+        let [m, n] = [1, 2, 3];
+        console.log(m);
+        console.log(n);
+
+        //(3)等号右边不是数组(不是可遍历的结构)，将会报错
+        // let [bar] = false;
+        // let [bar] = 1;
+        // let [bar] = {};
+
+
+
+        //2.对象的属性没有次序，变量必须与属性同名
+        //es5
+        const person2 = {
+            name: 'linda',
+            age: 23
+        }
+        const age = people2.age;
+
+        //es6
+        const person3 = {
+            names: 'ina',
+            ages: 22
+        }
+        const { names, ages } = person3;
+        const { name2, age2 } = {
+            name2: "aaa",
+            age2: 20
+        }
+        console.log(`${names}-----${ages}`);
+        console.log(`${name2}-----${age2}`);
+
+
+        //3.字符串的解构赋值
+        //(1)字符串被转换成了类似数组的对象
+        const [j,k,l] = 'hello';
+        j;                             //h
+        k;                             //e
+        l;                             //l
+
+        //(2)类似数组的对象都有一个length属性
+        let { length: len } = 'hello';
+        len;                           //5
+
+
+
+        //六、展开运算符...
+        //1.组装数组 
+        const color = ['red', 'blue'];
+        const colourful = [...color, 'green', 'pink'];
+        console.log(colourful);                                //['red','blue','green','pink']
+
+        //2.组装对象
+        const alp = { fist: 'a', second: 'b' }
+        const alphabets = { ...alp, third: 'c' }
+        console.log(alphabets)                                  //{ "fist": "a", "second": "b", "third": "c"
+
+        //3.获取前几项或某几项
+
+        //数组
+        const numbers = [1, 2, 3, 4, 5];
+        const [first2, ...rest] = numbers;
+        console.log(rest);                                      //2,3,4,5
+
+        //对象
+        const user = {
+            username: 'lux',
+            gender: 'female',
+            age: 19,
+            address: 'peking'
+        }
+        const {username,...rests}=user;        
+        console.log(rests);                                     // { gender: 'female',age: 19,address: 'peking'}
+
+        //对象组合，如果属性名重复，右边覆盖左边
+        const first3={
+            a:1,
+            b:2,
+            c:3
+        }
+
+        const second={
+            c:3,
+            d:5
+        }
+        const total={...first3,...second};
+        console.log(total);
+        console.log(second);
+
+
+        //七、import和export
+        //1.export导入模块
+        //(1)如果希望外部能够读取模块(一个独立的文件)内部的某个变量。就必须使用关键字export输出该变量
+
+
+        //八、promise对象
+        //1.promise是异步编程的一种解决方案，es6将其写进了语言标准，统一了语法，原生提供了promise对象
+        //2.promise就是一个容器，里面保存着未来才会结束的事件。promise是一个对象，从它可以获取异步操作的消息
+
+        /*3.promise的特点
+        (1)对象的状态不受外界影响。
+           promise对象代表一个异步操作，有三种状态: pending进行中、fulfilled已成功和rejected已失败，只有异步的操作结果，可以决定当前是哪种状态。
+        (2)一旦状态改变，就不会再变。
+           promise的状态只有两种,pending变为fulfilled，pending变为rejected，只要两种情况发生，状态就凝固了，不会再变，这时称为resolved(已定型)      
+        */
+
+         /*4.promise优点
+         (1) 有了promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套函数(可读性差，耦合度高，扩展性低) 
+         (2) promise对象提供统一的接口，控制异步操作更加容易   
+         */
+
+         /*5.promise缺点
+         (1) 无法取消promise，一旦建立就会立即执行，无法中途取消。
+         (2) 如果不设置回调函数，promise内部抛出的错误，不会反应到外部
+         (3) 处于pending状态时，无法得知目前进展到哪一个阶段(刚刚开始还是即将完成)
+         */
+
+         //6.基本用法
+         //(1)promise对象是一个构造函数，用来生成promise实例。
+         //   resovle函数将promise对象状态从“未完成”到“成功”，在异步操作成功时调用，并将异步操作结果作为参数传递出去。
+         //   reject函数将promise对象状态从“未完成”到“失败”，在异步调用失败时，将异步操作报出的错误，作为参数传递出去。
+         const promise=new Promise(function(resolve,reject){
+             if(true){
+                resolve(value);
+             }else{
+                 reject(error);
+             }
+         })
+
+         //(2)promise实例生成后，可以用then方法分别指定成功和失败状态的回调函数
+         //   then方法接受两个回调函数作为参数(resolved和rejected)，第二个函数是可选的
+         promise.then(function(value){
+            //成功后执行的操作
+         },function(error){
+            //失败后执行的操作
+         })
+
+         //example
+         function timeout(ms){
+             return new Promise(function(resolve,reject){
+                 setTimeout(resolve,ms,'done');
+             })
+         }
+
+         timeout(2000).then((value)=>{
+             console.log(value);
+         })
+    
+
+        
+
+
+
+
+
+
+
+
+
 
 
 
