@@ -346,7 +346,7 @@
 
         //3.字符串的解构赋值
         //(1)字符串被转换成了类似数组的对象
-        const [j,k,l] = 'hello';
+        const [j, k, l] = 'hello';
         j;                             //h
         k;                             //e
         l;                             //l
@@ -382,21 +382,21 @@
             age: 19,
             address: 'peking'
         }
-        const {username,...rests}=user;        
+        const { username, ...rests } = user;
         console.log(rests);                                     // { gender: 'female',age: 19,address: 'peking'}
 
         //对象组合，如果属性名重复，右边覆盖左边
-        const first3={
-            a:1,
-            b:2,
-            c:3
+        const first3 = {
+            a: 1,
+            b: 2,
+            c: 3
         }
 
-        const second={
-            c:3,
-            d:5
+        const second = {
+            c: 3,
+            d: 5
         }
-        const total={...first3,...second};
+        const total = { ...first3, ...second };
         console.log(total);
         console.log(second);
 
@@ -410,6 +410,11 @@
         //1.promise是异步编程的一种解决方案，es6将其写进了语言标准，统一了语法，原生提供了promise对象
         //2.promise就是一个容器，里面保存着未来才会结束的事件。promise是一个对象，从它可以获取异步操作的消息
 
+        'use strict';
+        new Promise(function () { });
+        console.log('支持Promise!');
+
+
         /*3.promise的特点
         (1)对象的状态不受外界影响。
            promise对象代表一个异步操作，有三种状态: pending进行中、fulfilled已成功和rejected已失败，只有异步的操作结果，可以决定当前是哪种状态。
@@ -417,48 +422,155 @@
            promise的状态只有两种,pending变为fulfilled，pending变为rejected，只要两种情况发生，状态就凝固了，不会再变，这时称为resolved(已定型)      
         */
 
-         /*4.promise优点
-         (1) 有了promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套函数(可读性差，耦合度高，扩展性低) 
-         (2) promise对象提供统一的接口，控制异步操作更加容易   
-         */
+        /*4.promise优点
+        (1) 有了promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套函数(可读性差，耦合度高，扩展性低) 
+        (2) promise对象提供统一的接口，控制异步操作更加容易   
+        */
 
-         /*5.promise缺点
-         (1) 无法取消promise，一旦建立就会立即执行，无法中途取消。
-         (2) 如果不设置回调函数，promise内部抛出的错误，不会反应到外部
-         (3) 处于pending状态时，无法得知目前进展到哪一个阶段(刚刚开始还是即将完成)
-         */
+        /*5.promise缺点
+        (1) 无法取消promise，一旦建立就会立即执行，无法中途取消。
+        (2) 如果不设置回调函数，promise内部抛出的错误，不会反应到外部
+        (3) 处于pending状态时，无法得知目前进展到哪一个阶段(刚刚开始还是即将完成)
+        */
 
-         //6.基本用法
-         //(1)promise对象是一个构造函数，用来生成promise实例。
-         //   resovle函数将promise对象状态从“未完成”到“成功”，在异步操作成功时调用，并将异步操作结果作为参数传递出去。
-         //   reject函数将promise对象状态从“未完成”到“失败”，在异步调用失败时，将异步操作报出的错误，作为参数传递出去。
-         const promise=new Promise(function(resolve,reject){
-             if(true){
-                resolve(value);
-             }else{
-                 reject(error);
-             }
-         })
+        //6.基本用法
+        //(1)promise对象是一个构造函数，用来生成promise实例。
+        //   resovle函数将promise对象状态从“未完成”到“成功”，在异步操作成功时调用，并将异步操作结果作为参数传递出去。
+        //   reject函数将promise对象状态从“未完成”到“失败”，在异步调用失败时，将异步操作报出的错误，作为参数传递出去。
+        const promise = new Promise(function (resolve, reject) {
+            if (true) {
+                resolve("2");
+            } else {
+                reject("error");
+            }
+        })
 
-         //(2)promise实例生成后，可以用then方法分别指定成功和失败状态的回调函数
-         //   then方法接受两个回调函数作为参数(resolved和rejected)，第二个函数是可选的
-         promise.then(function(value){
+        //(2)promise实例生成后，可以用then方法分别指定成功和失败状态的回调函数
+        //   then方法接受两个回调函数作为参数(resolved和rejected)，第二个函数是可选的
+        promise.then(function (value) {
             //成功后执行的操作
-         },function(error){
+        }, function (error) {
             //失败后执行的操作
-         })
+        })
 
-         //example
-         function timeout(ms){
-             return new Promise(function(resolve,reject){
-                 setTimeout(resolve,ms,'done');
-             })
-         }
 
-         timeout(2000).then((value)=>{
-             console.log(value);
-         })
-    
+        //example1，传递参数
+        function timeout(ms) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(resolve, ms, 'done');         //settimeout第一个参数必须是字符串形式的，第三个之后的参数依次用来表示第一个函数传入的参数
+            })                                         //这里的'done'可视为resolve函数的参数
+        }
+
+        timeout(2000).then((value) => {                  //value此时是参数'done',2秒后，promise实例状态变为resolved时触发then绑定的回调函数打印结果
+            console.log(value);
+        })
+
+
+        //example2 ，执行顺序
+        let promise2 = new Promise(function (res, rej) {            //1.promise新建后立即执行，先输出promise
+            console.log('Promise');
+            res();
+        });
+
+        promise.then(function () {
+            console.log('resolved.');                          //then方法指定的回调函数，在当前脚本所有同步任务执行完才会执行，所以最后输出
+        })
+
+        console.log("hi!");
+
+
+        //example3
+        //使用promise包装了一个图片加载的异步操作。如果加载成功，就调用res方法，否则调用rej
+        function loadImageAsync(url) {
+            return new Promise(function (res, rej) {
+                const image = new Image();
+                image.onload = function () {
+                    res(image);
+                }
+
+                image.onerror = function () {
+                    rej(new Error('could not load image at' + url));
+                }
+
+                image.src = url;
+                console.log(image.src);
+
+            })
+        }
+
+        loadImageAsync("http://pic.banggo.com/sources/images/goods/MC/508728/508728_00.jpg?x-oss-process=image/resize,m_pad,w_500,h_500");
+
+
+        //example4   promise.then()方法
+        function timeTest(res, rej) {
+            var timeout = Math.random() * 2;                            //0-2之前的随机数
+            console.log("set timeout to " + timeout + " seconds");
+
+            setTimeout(function () {
+                if (timeout < 1) {
+                    console.log("ready call resolve function");
+                    res("200 ok");
+                } else {
+                    console.log("ready call reject function");
+                    rej("timeout in " + timeout + " seconds");
+                }
+            }, timeout * 1000)
+
+        }
+        let p1 = new Promise(timeTest);
+        var p2 = p1.then((result) => {
+            console.log("成功:" + result);
+        }).catch((error) => console.log("失败：" + error));
+
+
+
+        //example5 并行执行任务promise.all()
+        var pro1=new Promise((res,rej)=>{
+            setTimeout(res,500,'pro1');
+        });
+
+        var pro2=new Promise((res,rej)=>{
+            setTimeout(res,600,'pro2');
+        })
+        
+        //同时执行pro1和pro2，并在它们都完成后执行then
+        Promise.all([pro1,pro2]).then((results)=>console.log(results));
+
+
+        //expamle6  promise封装ajax
+        const getJson=function(url){
+            const promise=new Promise((resolve,reject)=>{
+                const handler=function(){
+                    if(this.readyState!==4){
+                        return;
+                    }
+                    if(this.status===200){
+                        resolve(this.response);
+                    }else{
+                        reject(new Error(this.statusText));
+                    }
+                };
+
+                const client=new XMLHttpRequest();
+                client.open("GET",url);
+                client.onreadystatechange=handler;
+                client.responseType="json";
+                client.setRequestHeader("Accept","application/json");
+                client.send();
+
+            })
+
+            return promise;
+        }
+
+        getJson("json.js").then((result)=>{
+            console.log('contents'+result);
+        },error=>{
+            console.log("ajax出错了",error)
+        })
+
+        
+         
 
         
 
