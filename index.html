@@ -673,6 +673,66 @@
 
 
         //十、数组扩展
+        //扩展运算符... 将一个数组转为 用逗号分隔的参数序列
+
+        //(1)-------复制数组-------
+
+        //数组是复合的数据类型，直接复制，只是复制了指向底层数据结构的指针，而不是克隆一个新的数组
+        const a1=[1,2];
+        const a2=a1;                    //a2不是a1的克隆，而是指向同一份数据的另一个指针
+        a2[0]=2;                        //修改a2会直接导致a1的变化
+        console.log(a1);                //[2,2]     
+
+
+        //es5复制数组的方法 
+        const b1=[1,2];
+        const b2=b1.concat();           //b2是一个全新的数组，更改不会影响b1
+
+        b2[0]=2;
+        console.log(b1);
+
+        //运算符写法
+        const c1=[1,2];
+        const c2=[...c1];
+        const [...c3]=c1;
+        console.log(c2);                        //c2c3都是对c1的克隆
+        console.log(c3);        
+
+
+        //(2)------合并数组-------
+
+        const arr1=['a','b','c'];
+        const arr2=['a2','b2','c2'];
+        const arr3=['a3','b3','c3'];
+
+
+        //es5合并数组
+        const arr4=arr3.concat(arr2,arr1);
+
+        //es6        
+        const arr5=[...arr3,...arr2,...arr1];
+
+        
+        console.log(arr4);
+
+        console.log(arr5);
+
+
+        //arr4和arr5的成员都是对原数组成员的引用，也就是浅拷贝。如果修改了原数组的成员，会同步反应到新数组
+        console.log(arr4[0]===arr3[0]);      //true
+        console.log(arr5[0]===arr3[0]);      //true
+        arr2[0]='newa2';
+        console.log(arr2);      //true        
+        console.log(arr4);      //true
+        console.log(arr5);      //true
+        
+
+    
+
+
+        
+
+
 
 
 
