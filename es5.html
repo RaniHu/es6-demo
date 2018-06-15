@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>es5 demo</title>
+</head>
+
+<body>
+
+
+
+    <script>
+        window.onload = function () {
+            
+            /* es5整理 */
+
+            //一、Array对象
+
+            
+            //1.------Array构造函数------
+        
+            //(1)Array是js的原生对象，同时也是一个构造函数，用来生成新的数组
+            var arr=new Array(2);
+            var arr1=Array(2);
+
+            //(2)Array的参数是正整数返回的数组成员是空位，读取返回undefined，但实际没有任何值，可以获取length属性
+            var array=new Array(3);
+            console.log(array);                                     //empty*3   length :3
+
+            //(3)Array很大的缺陷是不同的参数会导致行为不一致，建议直接使用数组字面量
+            var arr2=[1,2];
+
+
+
+            //2.------静态方法------
+
+            //(1) Array.isArray() 返回一个布尔值，表示参数是否为数组
+            //弥补了typeof的不足，typeof运算符显示数组类型时object
+            Array.isArray([1,2,4]);
+
+
+            //3.------实例方法------
+
+            //(1) valueOf()   toString()
+            
+            //valueOf()是所有对象都拥有的方法，对该对象求值，数组的valueOf返回数组本身
+            console.log([1,2,4].valueOf());                         //[1,2,4]
+
+            //toString()是对象的通用方法，数组的toString方法返回数组的字符串形式
+            console.log([1,2,3,[6,7,8]].toString());               //"1,2,3,6,7,8"
+
+
+            //(2) push()   pop()
+            
+            //push 用于在数组末端添加元素，   返回添加新元素后的数组长度(会改变原数组)
+            console.log([1,2,4].push('push'));                     //4
+            
+            //pop 用于删除数组的最后一个元素，返回被删除的元素(会改变原数组)
+            console.log([1,2,10].pop());                           //10
+            console.log([].pop());                                 //空数组使用pop不会报错，返回undefined
+
+
+            //push与pop结合使用， 构成了后进先出的 栈结构
+            var arr3=[];
+            arr3.push(1,2,3);
+            arr3.push(4);
+            arr3.pop();
+            console.log(arr3);                                     //[1,2,3]  4后进先出
+
+
+
+            //(3) shift()   unshift()
+
+            //unshift()   用于在数组的第一个位置添加元素，并返回新添加元素后的数组长度(改变原数组)
+            console.log(['a',1,'b',2].unshift('c',3));              //6
+
+            //shift()     用于删除数组的第一个元素，并返回删除的元素(改变原数组)
+            console.log([1,2,3,5].shift());                         //1
+
+            //push与shift结合，构成了先进先出的队列结构
+
+
+            //(4) join() 指定参数为分隔符，将所有数组成员连接为一个字符串返回。不提供参数，默认用逗号分隔
+            console.log([1,2,4,5].join());                          //'1,2,4,5'
+            console.log([1,2,4,5].join(' '));                       //'1 2 4 5'
+
+            //如果数组成员是undefined或null或空位，会被转为空字符串
+            console.log([undefined,null,1,3].join('-'));            // --1-3
+
+
+            //(5)concat() 用于多个数组合并，返回一个新数组(原数组不变)
+            var arr4=[7,8,9];
+            console.log(arr4);
+            console.log(arr4.concat(['q','w','r']));
+
+
+            //(6)reverse() 用于颠倒排列数组，返回改变后的数组(改变原数组)
+            var arr5=[1,2,4];
+
+            console.log(arr5.reverse());                            //[1,2,4]
+            console.log(arr5);                                      //[1,2,4]
+
+
+            //(7)slice(起始位置，终止位置)  
+            //用于提取目标数组的一部分，返回新数组(原数组不变)
+            //起始位置从0开始，倒数第一从-1开始，第二个参数是终止位置(选取的数组不包括该位置元素)
+            
+            //第二个参数省略，则一只返回原数组的最后一个成员
+            console.log(['a','b','c'].slice(0,2));                  //['a','b']
+
+            //没有参数，返回一个原数组的拷贝
+            console.log([1,2,3].slice());                           //[1,2,3]
+
+            //参数是负数，则表示倒数结算的位置(-1表示倒数第一)
+            console.log([9,8,7,6,5,4].slice(-4,-2));                //[7,6]
+
+            //第一个参数大于数组长度，或第二个参数小于第一个参数，返回空数组
+            console.log([1,2,4].slice(4,2));                        //[]
+
+
+            //(8)splice(删除的起始位置,被删除元素个数,添加的元素1，添加的元素n...)
+            //用户删除原数组的一部分成员，并可以在删除的位置添加新成员，返回被删除的元素(会改变原数组)
+            var arr6=['q','w','e','r'];
+            console.log(arr6.splice(2,2,'instead1'));              //['e','r']
+
+            //只是单纯的插入元素，第二个参数设为0
+            var arr7=[1,2,3,4,5];
+            console.log(arr7.splice(2,0,9));                       //[]
+            console.log(arr7);                                     //[1,2,9,3,4,5]
+
+            //只提供第一个参数，等于将原数组在指定位置拆分为两个数组
+            var arr8=['a','s','d','f','g'];
+            console.log(arr8.splice(3));                           //['f','g']
+            console.log(arr8);                                     //['a','s','d']
+
+
+            //(9) sort()对数组进行排序
+            //默认按照字典顺序排序，返回排序后的数组，排序后原数组会改变
+            var arr9=['d','g','e','a','y'];
+            console.log(arr9.sort());                              //["a", "d", "e", "g", "y"]
+            console.log(arr9);                                     //["a", "d", "e", "g", "y"]
+
+            //数值被转换为字符串,再按照字典顺序进行比较
+            console.log([11,5,121,'a'].sort());                    //[11, 121, 5, "a"]
+
+            //让sort方法按照自定义方式排序，可传入一个函数作为参数
+            //比较邻近的两个数组成员，升序排序
+            var arr10=[2,11,33,1,67];
+            arr10.sort(function(a,b){
+                return a-b;
+            })
+            console.log(arr10);                                    //[1, 2, 11, 33, 67]
+
+
+
+
+            var arr11=[
+                { 
+                    name:'张三',age:32
+                },
+                {
+                    name:'李四',age:22
+                },
+                {
+                    name:'王五',age:28
+                }
+                    ];
+
+            arr11.sort(function(obj1,obj2){
+                return obj1.age-obj2.age;
+            })
+            console.log(arr11);                                   //按年龄顺序
+
+
+
+            //(10) map(val,index,array) 接受一个函数为参数，将数组所有成员依次传入参数函数，再把每一次的结果组成一个新数组返回
+            [1,2,3,4].map(function(val,index,arr){
+                console.log(val*index);                           //0 4 6 12
+            });
+
+
+            
+            
+
+        
+            
+
+
+
+            //(1) forEach()  
+            //方法中的function回调支持3个参数(val,index,array)
+            //jquery中的$.each(index,val,array)
+
+            //默认传参(打印了三个参数)
+            ['a','b','c'].forEach(console.log);                      // 'a'  0  ["a", "b", "c"]   'b' 1 ["a", "b", "c"]   'c' 2 ["a", "b", "c"]
+            
+
+            //遍历求和
+            var sum=0;
+
+            [1,2,3,4,5].forEach(function(item,index,array){
+                sum+=item;
+            })
+            console.log(sum);
+
+
+            //(2) map(val,index,array)映射 与foreach类似 
+
+            //(3) filter(val,index,array)映射 与foreach类似
+
+
+
+        }
+    </script>
+
+
+</body>
+
+</html>

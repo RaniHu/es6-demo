@@ -208,7 +208,7 @@
 
 
 
-        //九、字符串扩展
+        //二、字符串扩展
 
         //1.模板字符串，将表达式嵌入字符串进行拼接
 
@@ -309,7 +309,8 @@
             }
         }
 
-        //2.Object.assign(目标对象，源1，源2)浅复制，把任意多个源对象可枚举的属性拷贝给目标对象，返回目标对象。
+        //2.Object.assign(目标对象，源1，源2)
+        //浅拷贝，把任意多个源对象可枚举的属性拷贝给目标对象，返回目标对象。
 
         //实际项目中，为了不改变源对象，一般把目标对象传为{}
         const objA = {
@@ -321,6 +322,18 @@
         }
         const obj = Object.assign({}, objA, objB);
         console.log(obj); //{name: "lucy", age: 20, address: "Shanghai"}
+
+        //3.遍历对象的五种方法
+
+        //for in  遍历对象自身和继承的可枚举属性(不包括symbol)
+        //Objects.keys()  返回数组，包括对象自身（不含继承）所有可枚举属性的键名（不包含symbol）
+        //Object.getOwnPropertyNames(obj)   返回数组，包含对象自身的所有属性（不含 Symbol 属性，但是包括不可枚举属性）的键名
+        //Object.getOwnPropertySymbols(obj) 返回数组，包含对象自身的所有 Symbol 属性的键名。
+        //Reflect.ownKeys(obj)   返回数组，包含对象自身的所有键名，不管键名是 Symbol 或字符串，也不管是否可枚举。
+
+
+
+
 
 
 
@@ -406,7 +419,7 @@
 
         //3.获取前几项或某几项
 
-        //数组
+        //数组,扩展运算符用于数组赋值，只能放在参数最后一位，否则报错
         const numbers = [1, 2, 3, 4, 5];
         const [first2, ...rest] = numbers;
         console.log(rest); //2,3,4,5
@@ -673,7 +686,7 @@
 
 
         //十、数组扩展
-        //扩展运算符... 将一个数组转为 用逗号分隔的参数序列
+        //1.扩展运算符... 将一个数组转为 用逗号分隔的参数序列
 
         //(1)-------复制数组-------
 
@@ -722,9 +735,176 @@
         console.log(arr4[0]===arr3[0]);      //true
         console.log(arr5[0]===arr3[0]);      //true
         arr2[0]='newa2';
-        console.log(arr2);      //true        
-        console.log(arr4);      //true
-        console.log(arr5);      //true
+        console.log(arr2);                   //['newa2','b2','c2']        
+        console.log(arr4);                   //['a3','b3','c3','a2','b2','c2','a','b','c']
+        console.log(arr5);                   //['a3','b3','c3','a2','b2','c2','a','b','c']
+
+
+        //(3)------与解构赋值结合-------
+        //扩展运算符用于数组赋值，只能放在参数的最后一位，否则报错
+        const [firstParams,...restParams]=[1,2,4,5,6];
+        console.log(firstParams);             //1
+        console.log(restParams);              //[2,4,5,6]
+
+        const [oneParmas,lastParams]=[];
+        console.log(oneParmas);               //undefined
+        console.log(lastParams);              //[]
+
+        const [firstOne,lastOne]=["foo"];
+        console.log(firstOne);               //foo
+        console.log(lastOne);                //[]
+        
+
+        //(4)将字符串转为真正的数组
+        console.log([...'hello']);           //['h','e','l','l','o']
+
+        //(5)实现了Iterator接口的对象可以用扩展运算符转为真正的数组
+
+        //Iterator遍历器是一种接口，为各种不同的数据结构提供统一的访问机制。
+        //任何数据结构只要部署了Iterator接口,就可以完成遍历操作
+        //es6中有三种结构具备iterator接口:数组、类似数组的对象、map和set结构(都表示集合的概念),可使用for..of遍历
+        //没有部署iterator接口的类似数组的对象，扩展运算符无法将其转为真正的数组,可使用array.from方法
+
+        //querySelectorAll方法返回一个nodelist对象.nodelist是一个类似数组的对象
+        let nodeList=document.querySelectorAll('div');
+        let resultArr=[...nodeList];
+
+        //(6)map和set结构
+        //扩展运算符内部调用的是iterator接口
+
+        let map=new Map([
+            [1,'one'],
+            [2,'two'],
+            [3,'three'],
+        ]);
+
+        let mapResult=[...map.keys()];              //[1,2,3]
+
+
+
+
+        //2.------Array.from()------
+        //用于将 类似数组的对象(本质特征只有一点，即必须有length属性) 和  课遍历的对象转为真正的数组
+        //只要是部署了 Iterator 接口的数据结构，Array.from都能将其转为数组
+
+
+    
+        //(1)如果参数是一个真正的数组，Array.from会返回一个一模一样的新数组。
+        let arrayLike={
+            '0':'a',
+            '1':'b',
+            '2':'c',
+            length:3
+        };
+
+        //es5写法
+        console.log([].slice.call(arrayLike));       //['a','b','c']
+
+        //es6
+        console.log(Array.from(arrayLike));          //['a','b','c']
+
+
+        //(2)任何具有length属性的对象，都可以通过array.from转为数组(...运算符不行)
+        console.log(Array.from({length:3}));         //['undefined','undefined','undefined']   
+
+        //(3)对于没有部署该方法的浏览器，可以用Array.prototype.slice方法替代
+        const toArray=(()=>
+            Array.from?Array.from:obj=>[].slice.call(obj)
+        )();
+
+
+        //(4)Array.from()接受第二个参数，类似于数组的map方法，对每个元素进行处理，将处理后的值放入返回的数组
+
+        Array.from([1,2,3],x=>x*x);                 //[1,4,9]
+
+
+        //取出一组dom节点的文本内容
+        let doms=document.querySelectorAll('div');
+        Array.from(doms,dom=>dom.textContent);
+
+
+        //3.------ Array.of() ------
+        //将一组值转换为数组,基本可以代替Array()和new Array()
+
+        console.log(Array.of(1,4,5));                //[1,4,5]
+        console.log(Array.of(3).length);             //1
+        console.log(Array.of());                     //[]
+        console.log(Array.of(undefined));            //[undefined]
+
+        //Array()只有参数只有一个时，指数组的长度
+        console.log(Array());                        //[]
+        console.log(Array(3));                       //[,,,]
+        console.log(Array(3,4,5));                   //[3,4,5]
+
+
+        //Array.of模拟实现
+        function ArrayOf(){
+            return [].slice.call(arguments);
+        }
+
+
+        //4.------数组实例的fill()方法------
+
+        //(1)fill 方法用于填充一个数组,数组中已有的元素，会被全部抹去
+        console.log(['a','b','c'].fill(7));          //[7,7,7]
+
+        console.log(new Array(3).fill(7));           //[7,7,7]
+
+
+        //(2)fill 第二和三个参数用于指定  填充的起始位置和结束位置
+
+        console.log([1,2,4].fill(7,1,2));            //[1,7,4];
+
+
+        //5.------entries()  keys()  values()遍历数组------
+        //es6提供三个新的方法遍历数组，它们都返回一个遍历器对象，可以用for...of遍历
+
+
+        //keys()对键名的遍历
+        for(let index of ['a','b','c'].keys()){
+            console.log(index);                     //0,1,2
+        }
+
+        //values()对键值的遍历
+        for(let val of ['a','b','c'].values()){
+            console.log(val);                       //a,b,c
+        }
+
+        //entries()对键值对的遍历
+        for(let [index,val] of ['a','b','c'].entries()){
+            console.log(index,val);                 //0,'a'  1,'b'  2 'c'
+        }
+
+
+        //6. ------includes()------
+        //includes()方法返回一个布尔值，表示某个数组是否包含给定的值
+        console.log([1,2,4].includes(2));
+        console.log([1,2,5].includes(3));
+
+        //该方法第二个参数表示搜索的起始位置,默认为0，负数则表示倒数位置
+        console.log([1,2,4].includes(2,1));          //true
+        console.log([1,2,4].includes(3,-1));         //false
+
+        //map的has(key)方法用来查找简明,set的has(val)方法用来找键值
+
+
+        //7.------数组的空位------
+
+        //(1)es5中  
+        //forEach,filter,reduce,every,some会跳过空位； map跳过空位但保留值；join和toString将空位视为undefined；undefined和null被处理为空字符串
+        
+
+        //(2)es6中，空位转为undefined
+
+
+
+
+
+
+        
+
+        
+        
         
 
     
