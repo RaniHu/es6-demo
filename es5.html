@@ -439,8 +439,141 @@
             try{
                 JSON.parse("'String'");
             }catch(e){
-                console.log('parsing error');
+                console.log('parsing error');   //parsing error
             }
+
+
+            //四.String对象
+            //1.概述
+            //(1)String对象是js原生提供的三大包装对象之一，用来生成字符串对象
+            //(2)字符串对象是一个类似数组的对象
+            var s1='abc';                       //字符串
+            var s2=new String('abc');           //字符串对象
+            console.log(new String('abc'));     //String {0: "a", 1: "b", 2: "c", length: 3}
+            console.log(new String('abc')[0]);  //a
+
+            //(3)String对象可以当做工具方法使用，将任意类型的值转为字符串
+            console.log(String(true));          //"true"
+            console.log(String(2));             //"2"
+
+
+            //2.静态方法
+            //(1)String.fromCharCode() 参数是一个多多个数值，代表unicode码点，返回值是这些码点组成的字符串
+            //参数为空，返回空字符串；否则返回参数对应的unicode字符串
+            console.log(String.fromCharCode());                 //""
+            console.log(String.fromCharCode(98));               //"b"
+            console.log(String.fromCharCode(100,108,111));      //"dlo"
+            
+            //此方法不支持unicode码点大于0xFFFF的字符（即十进制不能大于65535）
+
+
+            //3.实例属性
+            //(1)length属性返回字符串的长度
+            console.log('abcd'.length);             //4
+
+
+            //4.实例方法
+            //(1)charAt()
+            //返回指定位置的字符，参数从0开始编号的位置
+            var s=new String('abcf');
+            console.log(s.charAt(2));               //"c"
+            console.log(s.charAt(s.length-1));      //"f"
+
+            //此方法完全可以用数组下标替代
+            console.log('abcf'[2]);                 //"c"
+
+            //参数为负数，或者参数大于字符串长度，返回空字符串
+            console.log('avb'.charAt(6));           //""            
+            console.log('avb'.charAt(-2));          //""
+
+
+            //(2)charCodeAt()
+            //返回字符串指定位置的unicode码点，是String，fromCharCode的逆操作
+
+            //这里是返回b的码点
+            console.log('abc'.charCodeAt(1));       //98  
+
+            //没有参数返回首个字符的码点
+            console.log('abc'.charCodeAt());        //97  
+
+            //参数为负数，或者参数大于字符串长度，返回NAN 
+            console.log('abc'.charCodeAt(4));       //NAN
+
+
+            //(3)concat() 
+            //连接两个字符串，返回一个新字符串，不改变原字符串
+            console.log('abc'.concat('dddd'));      //abcdddd
+
+            //如果参数不是字符串，会先转为字符串再连接
+            console.log('abc'.concat('bcd',2,5));   //abcbcd25
+
+
+            //(4)slice(开始位置，结束位置不包含这个位置)
+            //从原字符串中取出字字符串并返回，不改变原字符串
+
+            console.log('javascript'.slice(2,5));   //vas
+
+            //省略第二个参数，表示一直截取到原字符串结束
+            console.log('javascript'.slice(3));     //ascript
+
+            //参数是负数，表示从末尾开始倒数计算
+            console.log('javascript'.slice(2,-2));  //vascri   从2开始，不包括-2
+
+            //如果第一个参数大于第二个参数，返回空字符串
+            console.log('javascript'.slice(3,1));  //""
+
+
+            //(5)substring()
+            //截取字符串饼返回，不改变原字符串，类似于slice方法
+
+            //如果第一个参数大于第二个参数，自动更换两个参数的位置
+            console.log('react'.substring(4,2));   //ac
+            console.log('react'.substring(5,2));   //act
+
+            //参数是负数，会将负数转为0 即 (2,0)再转为(0,2)
+            console.log('react'.substring(2,-2));   //re
+
+
+            //(6)substr(开始位置，字符串长度)
+            //截取字符串，不改变原字符串与slice，substring类似
+
+
+            //第一个参数是负数，表示倒数计算字符的位置
+            console.log('react'.substr(-2,3));      //ct
+
+            //第二个参数是负数会转为0,即截取长度为0，返回空字符串
+            console.log('react'.substr(2,-3));      //""
+
+
+
+            //(7)indexOf(要匹配的字符串，匹配的位置) 第二个参数可选
+            //参数中的字符串在另一个字符串中第一次出现的位置，返回匹配开始的位置，返回-1表示不匹配
+
+            console.log('hello'.indexOf('o'));                //4
+            console.log('javascript'.indexOf('Script'));      //-1
+            console.log('hello'.indexOf('l',2));      //-1
+            
+
+            
+
+
+
+            //lastIndexOf()
+            
+            
+            
+
+
+
+
+
+            
+
+
+
+            
+            
+
 
 
 
